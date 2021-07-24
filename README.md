@@ -52,4 +52,5 @@ Use a library like [systray](https://github.com/getlantern/systray) to create a 
 * https://github.com/getlantern/systray
 * https://github.com/whosonfirst/go-rasterzen
 * [Here.xyz Golang Wifi Tutorial](https://developer.here.com/blog/tracking-a-raspberry-pi-with-wlan-and-golang-then-displaying-the-results-with-here-xyz)
+* https://github.com/schollz/wifiscan
 
