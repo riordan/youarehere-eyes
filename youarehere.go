@@ -9,8 +9,10 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 
 	"github.com/schollz/wifiscan"
+	"github.com/spf13/viper"
 )
 
 type HerePlatform struct {
@@ -24,6 +26,19 @@ type PositionResponse struct {
 		Longitude float64 `json:"lng"`
 		Accuracy  int     `json:"accuracy"`
 	} `json:"location"`
+}
+
+type WlanInfo struct {
+	BSSID string `json:"mac"`
+}
+
+type AccessPoints struct {
+	Wlan []WlanInfo `json:"wlan"`
+}
+
+type AccessPointData struct {
+	mux  sync.Mutex
+	data []AccessPoints
 }
 
 func (platform *HerePlatform) position(payload []byte) (PositionResponse, error) {
@@ -51,7 +66,15 @@ func scanWifiNetworks() []wifiscan.Wifi {
 	return wifis
 }
 
+var platform HerePlatform
+var accessPointData AccessPointData
+
 func main() {
+	fmt.Println("Starting the application...")
+
+	viper.ReadInConfig()
+	platform = HerePlatform{AppId: "APP-ID-HERE", AppCode: "APP-CODE-HERE"}
+
 	networks := scanWifiNetworks()
 	for _, w := range networks {
 		formatMac := strings.ReplaceAll(strings.ToUpper(w.SSID), ":", "-")
